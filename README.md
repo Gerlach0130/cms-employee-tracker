@@ -4,6 +4,10 @@
 
   A command-line application using MySQL to take and store information about a company's employees & managers, their roles and respective departments.
 
+  Video showcasing application functionality:
+
+  https://drive.google.com/file/d/1wXQfi3fdIxrjMo27FkxlAp80Ma_RCdVs/view
+
   ## Table of Contents
   * [Installation](#installation)
   * [Usage](#usage)
