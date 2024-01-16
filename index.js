@@ -11,6 +11,7 @@ const db = mysql.createConnection(
     console.log(`Connected to the records_db database.`)
   );
 
+const promptUser = () => {
 inquirer
   .prompt([
     {
@@ -24,7 +25,8 @@ inquirer
         'Add a department', 
         'Add a role', 
         'Add an employee', 
-        'Update an employee role']
+        'Update an employee role',
+        'Exit']
       }
   ])
   .then((answer => {
@@ -55,7 +57,10 @@ inquirer
     if (answer.menu === 'Update an employee role') {
       updateEmployeeRole();
     }
-}));
+    if (answer.menu === 'Exit') {
+      process.exit();
+    }
+}))};
 
 showDepartments = () => {
   console.log('Showing all departments:');
@@ -65,6 +70,7 @@ showDepartments = () => {
   db.query(data, (err, rows) => {
     if (err) throw err;
     console.table(rows);
+    promptUser();
   });
 };
 
@@ -79,6 +85,7 @@ showRoles = () => {
   db.query(data, (err, rows) => {
     if (err) throw err;
     console.table(rows);
+    promptUser();
   });
 };
 
@@ -98,6 +105,7 @@ showEmployees = () => {
   db.query(data, (err, rows) => {
     if (err) throw err;
     console.table(rows);
+    promptUser();
   });
 };
 
@@ -113,6 +121,7 @@ addDepartment = () => {
       const data = `INSERT INTO department (name) VALUES (?)`;
       db.query(data, answer.addDepartment, () => {
         console.log('Added ' + answer.addDepartment + ' to departments.'); 
+        promptUser();
     });
   });
 };
@@ -147,10 +156,10 @@ addRole = () => {
           .then(answer => {
             const department = answer.department;
             answerData.push(department);
-            console.log(answerData);
             const sql = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`;
             db.query(sql, answerData, () => {
               console.log('Added ' + answerData[0] + " to roles."); 
+              promptUser();
        });
      });
    });
@@ -202,10 +211,10 @@ addEmployee = () => {
                   .then(answer => {
                     const manager = answer.manager;
                     answerData.push(manager);
-                    console.log(answerData);
                     const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`;
                     db.query(sql, answerData, () => {
                     console.log("New employee added to database.")
+                    promptUser();
               });
             });
           });
@@ -250,9 +259,12 @@ updateEmployeeRole = () => {
                 const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
                 db.query(sql, dataArr, () => {
                 console.log("Successfully updated employee.");
+                promptUser();
           });
         });
       });
     });
   });
 };
+
+promptUser();
